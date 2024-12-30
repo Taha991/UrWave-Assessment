@@ -6,4 +6,8 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\UrWave.Domain\UrWave.Domain.csproj" />
+  </ItemGroup>
+
 </Project>
