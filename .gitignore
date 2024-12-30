@@ -1,0 +1,103 @@
+# Build results
+bin/
+obj/
+
+# User-specific files
+*.rsuser
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# Logs
+*.log
+
+# Visual Studio Code
+.vscode/
+*.code-workspace
+
+# Visual Studio specific
+.vs/
+
+# Packages
+*.nupkg
+*.snupkg
+packages/
+.nuget/
+
+# Environment files
+.env
+
+# Generated files
+*.generated.cs
+*.designer.cs
+
+# Database files
+
+
+
+# Entity Framework Migrations
+Migrations/
+
+# ASP.NET Scaffolding
+ScaffoldingReadMe.txt
+
+# Azure related
+.localhistory/
+
+# JetBrains Rider
+.idea/
+*.iml
+
+# MacOS specific
+.DS_Store
+
+# Windows specific
+Thumbs.db
+desktop.ini
+
+# Git specific
+*.orig
+*.lock
+
+# Dependencies
+node_modules/
+
+# Output from dotnet publish
+publish/
+
+# Coverage tools
+*.coverage
+*.coveragexml
+*.coveragejson
+
+# Report files
+*.trx
+*.cobertura.xml
+
+# Application files
+appsettings.Development.json
+appsettings.Production.json
+appsettings.local.json
+
+# Angular-specific exclusions
+client/node_modules/
+client/dist/
+client/.angular/
+client/.cache/
+client/.firebase/
+client/src/environments/environment.prod.ts
+client/src/environments/environment.ts
+
+# Angular build files
+client/*.log
+client/*.lock
+client/*.bak
+client/*.tmp
+client/coverage/
+client/.idea/
+client/.vscode/
+client/.DS_Store
+client/npm-debug.log*
+client/yarn-debug.log*
+client/yarn-error.log*
