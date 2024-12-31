@@ -14,57 +14,86 @@ import { CategoryFormComponent } from './pages/categories/category-form/category
 import { authGuard } from './guards/auth.guard';
 import { roleGuard } from './guards/role.guard';
 import { loginGuard } from './guards/login.guard';
+import { RegisterComponent } from './pages/register/register.component';
+import { ShopComponent } from './pages/shop/shop.component';
 
 export const routes: Routes = [
   { path: '', redirectTo: '/home', pathMatch: 'full' },
   {
     path: 'home',
     component: HomeComponent,
-    // canActivate: [authGuard, roleGuard],
+    canActivate: [authGuard, roleGuard],
+    data: { roles: ['Admin'] }, // Admin and Customer can access
+
   },
   {
     path: 'payment-orders',
     component: PaymentOrdersComponent,
-    // canActivate: [authGuard, roleGuard],
+    canActivate: [authGuard, roleGuard],
+    data: { roles: ['Admin', 'Customer'] }, // Admin and Customer can access
+  },
+  {
+    path: 'shop',
+    component: ShopComponent,
+  
   },
   {
     path: 'payment-orders/:id',
     component: PaymentOrderDetailsComponent,
-    // canActivate: [authGuard, roleGuard],
+    canActivate: [authGuard, roleGuard],
+    data: { roles: ['Admin', 'Customer'] }, // Admin and Customer can access
   },
   {
     path: 'users',
     component: UsersComponent,
-    // canActivate: [authGuard, roleGuard],
+    canActivate: [authGuard, roleGuard],
+    data: { roles: ['Admin'] }, // Only Admin can access
   },
   {
     path: 'products',
     component: ProductListComponent,
+    canActivate: [authGuard, roleGuard],
+    data: { roles: ['Admin', 'Customer'] }, // Admin and Customer can view products
   },
   {
     path: 'products/create',
     component: ProductFormComponent,
+    canActivate: [authGuard, roleGuard],
+    data: { roles: ['Admin'] }, // Only Admin can create products
   },
   {
     path: 'products/edit/:id',
     component: ProductFormComponent,
+    canActivate: [authGuard, roleGuard],
+    data: { roles: ['Admin'] }, // Only Admin can edit products
   },
   {
     path: 'categories',
     component: CategoryListComponent,
+    canActivate: [authGuard, roleGuard],
+    data: { roles: ['Admin', 'Customer'] }, // Admin and Customer can view categories
   },
   {
     path: 'categories/create',
     component: CategoryFormComponent,
+    canActivate: [authGuard, roleGuard],
+    data: { roles: ['Admin'] }, // Only Admin can create categories
   },
   {
     path: 'categories/edit/:id',
     component: CategoryFormComponent,
+    canActivate: [authGuard, roleGuard],
+    data: { roles: ['Admin'] }, // Only Admin can edit categories
   },
   {
     path: 'login',
     component: LoginComponent,
-    // canActivate: [loginGuard],
+    canActivate: [loginGuard],
+  },
+  {
+    path: 'register',
+    component: RegisterComponent ,
+    data: { roles: ['Admin', 'Customer'] }, // Admin and Customer can view categories
   },
   { path: '401', component: UnauthorizedComponent },
   { path: '403', component: ForbiddenComponent },

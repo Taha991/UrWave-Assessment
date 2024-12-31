@@ -1,7 +1,7 @@
 <div class="sidebar-container">
   <div routerLink="/home">
     <i class="pi pi-clipboard"></i>
-    <h1>Dashboard</h1>
+    <h1>UrWave</h1>
   </div>
   <nav class="sidebar">
     <a
@@ -11,8 +11,17 @@
       ariaCurrentWhenActive="page"
     >
       <i class="pi pi-home"></i>
-      <span>Home</span>
+      <span>Dashboard</span>
     </a>
+    <a
+    class="link"
+    routerLink="/shop"
+    routerLinkActive="active"
+    ariaCurrentWhenActive="page"
+  >
+  <i class="pi pi-clipboard"></i>
+  <span>Store</span>
+  </a>
     <a
       class="link"
       routerLink="/users"
@@ -22,15 +31,7 @@
       <i class="pi pi-users"></i>
       <span>Users</span>
     </a>
-    <a
-      class="link"
-      routerLink="/payment-orders"
-      routerLinkActive="active"
-      ariaCurrentWhenActive="page"
-    >
-      <i class="pi pi-shopping-cart"></i>
-      <span>Orders</span>
-    </a>
+   
     <a
       class="link"
       routerLink="/products"
@@ -49,14 +50,26 @@
       <i class="pi pi-tags"></i>
       <span>Categories</span>
     </a>
-    @if (!(isLoggedIn)) {
-    <button pButton routerLink="/login">
-      <div class="btn">Login</div>
-    </button>
-    } @else {
-    <button pButton (click)="logout()">
-      <div class="btn">Logout</div>
-    </button>
-    }
+    <a
+    class="link"
+    routerLink="/payment-orders"
+    routerLinkActive="active"
+    ariaCurrentWhenActive="page"
+  >
+    <i class="pi pi-shopping-cart"></i>
+    <span>Orders</span>
+  </a>
+    <!-- Conditional Login/Logout Buttons -->
+    <ng-container *ngIf="isLoggedIn$ | async; else loginButton">
+      <button pButton (click)="logout()">
+        <div class="btn">Logout</div>
+      </button>
+    </ng-container>
+    <ng-template #loginButton>
+      <button pButton routerLink="/login">
+        <div class="btn">Login</div>
+      </button>
+    </ng-template>
+    
   </nav>
 </div>

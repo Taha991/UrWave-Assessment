@@ -7,20 +7,22 @@
         <label for="email">Email</label>
       </p-floatLabel>
       <p-floatLabel>
-        <input
-          id="password"
-          pInputText
-          formControlName="password"
-          type="password"
-        />
+        <input id="password" pInputText formControlName="password" type="password" />
         <label for="password">Password</label>
       </p-floatLabel>
-      <button pButton>
-        <div class="btn">Login</div>
-      </button>
+        <!-- Display error message -->
+        <div *ngIf="errorMessage" class="error-message">
+          {{ errorMessage }}
+    </div>
+      <button pButton type="submit" label="Login" class="btn-login"></button>
     </form>
-    @if (errorMessage) {
-    <div class="error-message">{{ errorMessage }}</div>
-    }
+
+  
+
+    <!-- Register Button -->
+    <div class="register-button">
+      <button pButton type="button" label="Register" class="btn-register" (click)="navigateToRegister()"></button>
+    </div>
+    
   </p-card>
 </div>

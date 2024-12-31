@@ -1,18 +1,13 @@
-import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject, Observable, of } from 'rxjs';
 import { map, catchError } from 'rxjs/operators';
-import { User } from './user.service';
-
-interface RemoteLoginResponse {
-  token: string;
-}
 
 @Injectable({
   providedIn: 'root',
 })
 export class AuthService {
-  private apiUrl = 'http://localhost:3000/users';
+  private apiUrl = 'https://localhost:7024/users';
   private currentUserSubject: BehaviorSubject<any>;
   public currentUser: Observable<any>;
 
@@ -22,42 +17,51 @@ export class AuthService {
     this.currentUser = this.currentUserSubject.asObservable();
   }
 
-  loginRemote(email: string, password: string) {
-    const url = 'https://webhook.site/a758bb08-0248-488d-86b6-67995ad595a4';
-    return this.http.post<RemoteLoginResponse>(url, { email, password }).pipe(
+  login(email: string, password: string): Observable<boolean> {
+    return this.http.post<{ token: string; role: string }>(`${this.apiUrl}/login`, { email, password }).pipe(
       map((response) => {
-        localStorage.setItem('token', JSON.stringify(response.token));
+        if (response.token) {
+          localStorage.setItem('token', response.token);
+          localStorage.setItem('role', response.role); // Store role
+          this.currentUserSubject.next({ token: response.token, role: response.role });
+          return true;
+        }
+        return false;
+      }),
+      catchError((error) => {
+        console.error('Login failed:', error);
+        return of(false);
       })
     );
   }
 
-  login(email: string, password: string): Observable<boolean> {
-    return this.http.get<any[]>(`${this.apiUrl}?email=${email}`).pipe(
-      map((users) => {
-        if (users.length > 0) {
-          const user = users[0];
-          if (user.password === password) {
-            this.currentUserSubject.next(user);
-            localStorage.setItem('currentUser', JSON.stringify(user));
-            return true;
-          }
-        }
-        return false;
-      }),
-      catchError(() => of(false))
-    );
-  }
-
   logout(): void {
-    this.currentUserSubject.next(null);
-    localStorage.removeItem('currentUser');
+    this.http.post(`${this.apiUrl}/logout`, {}, { headers: { Authorization: `Bearer ${localStorage.getItem('token')}` } })
+      .subscribe({
+        next: () => {
+          console.log('Logout successful');
+        },
+        error: (error) => {
+          console.error('Logout failed:', error);
+        },
+        complete: () => {
+          // Clear client-side storage after the logout request completes
+          localStorage.removeItem('token');
+          localStorage.removeItem('role');
+          this.currentUserSubject.next(null);
+        },
+      });
   }
-
+  
   isAuthenticated(): boolean {
-    return !!this.currentUserSubject.value;
+    return !!localStorage.getItem('token');
   }
 
-  getCurrentUser(): User {
+  getRole(): string | null {
+    return localStorage.getItem('role'); // Get role from storage
+  }
+
+  getCurrentUser(): any {
     return this.currentUserSubject.value;
   }
 }

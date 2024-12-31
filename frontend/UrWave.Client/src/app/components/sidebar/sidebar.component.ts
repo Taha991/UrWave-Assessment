@@ -1,9 +1,10 @@
-import { Component, inject } from '@angular/core';
+import { Component } from '@angular/core';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { ButtonModule } from 'primeng/button';
 import { AuthService } from '../../services/auth.service';
 import { Router } from '@angular/router';
-import { Observable, map } from 'rxjs';
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 import { CommonModule } from '@angular/common';
 
 @Component({
@@ -11,19 +12,23 @@ import { CommonModule } from '@angular/common';
   standalone: true,
   imports: [RouterLink, RouterLinkActive, ButtonModule, CommonModule],
   templateUrl: './sidebar.component.html',
-  styleUrl: './sidebar.component.css',
+  styleUrls: ['./sidebar.component.css'],
 })
 export class SidebarComponent {
-  isLoggedIn: boolean = false;
+  isLoggedIn$: Observable<boolean>;
 
   constructor(private auth: AuthService, private router: Router) {
-    this.auth.currentUser.subscribe((user) => {
-      this.isLoggedIn = !!user;
-    });
+    // Observable to track login state
+    this.isLoggedIn$ = this.auth.currentUser.pipe(map((user) => !!user));
   }
 
   logout(): void {
-    this.auth.logout();
-    this.router.navigate(['/login']);
+    if (confirm('Are you sure you want to log out?')) {
+      this.auth.logout();
+      this.router.navigate(['/login']).then(() => {
+        window.location.reload();
+      });
+    }
   }
+  
 }

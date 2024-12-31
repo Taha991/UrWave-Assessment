@@ -4,19 +4,31 @@ import { catchError, Observable, throwError } from 'rxjs';
 
 export interface User {
   id: string;
-  firstName: string;
-  lastName: string;
-  email: string;
-  password: string;
-  roles: string[];
+  Username: string;
+  Email: string;
+  Password: string;
+  Role: string;
   createdOn: Date;
+}
+export interface UserCreateDto {
+  Username: string;
+  Email: string;
+  Password: string;
+  Role: string; // Admin or Customer
+}
+export interface UserResponse {
+  id: string;
+  username: string;
+  email: string;
+  role: string;
+  createdDate: string; // Keep it as string if it is ISO format from backend
 }
 
 @Injectable({
   providedIn: 'root',
 })
 export class UserService {
-  private apiUrl = 'http://localhost:3000/users';
+  private apiUrl = 'https://localhost:7024/users';
 
   http = inject(HttpClient);
 
@@ -30,33 +42,52 @@ export class UserService {
     return throwError(() => new Error('Something bad happened; please try again later.'));
   }
 
+  private getHeaders() {
+    const token = localStorage.getItem('token');
+    return new HttpHeaders({
+      Authorization: `Bearer ${token}`,
+    });
+  }
+
   getUsers(): Observable<User[]> {
-    return this.http.get<User[]>(this.apiUrl).pipe(
+    return this.http.get<User[]>(this.apiUrl, { headers: this.getHeaders() }).pipe(
       catchError(this.handleError)
     );
   }
 
-  getUserById(id: string): Observable<User> {
-    return this.http.get<User>(`${this.apiUrl}/${id}`).pipe(
+  getAllUsers(): Observable<User[]> {
+    return this.http.get<User[]>(this.apiUrl, { headers: this.getHeaders() }).pipe(
+      catchError((error) => {
+        console.error('Failed to fetch all users:', error);
+        return throwError(() => new Error('Unable to fetch users. Please try again later.'));
+      })
+    );
+  }
+  
+
+  getUserById(id: string): Observable<UserResponse> {
+    return this.http.get<UserResponse>(`${this.apiUrl}/${id}`, { headers: this.getHeaders() }).pipe(
       catchError(this.handleError)
     );
   }
+  
 
-  createUser(user: User): Observable<User> {
-    return this.http.post<User>(this.apiUrl, user).pipe(
+  createUser(user: UserCreateDto): Observable<User> {
+    return this.http.post<User>(`${this.apiUrl}/register`, user, { headers: this.getHeaders() }).pipe(
       catchError(this.handleError)
     );
   }
-
-  updateUser(id: string, user: User): Observable<User> {
-    return this.http.put<User>(`${this.apiUrl}/${id}`, user).pipe(
+  
+  updateUser(id: string, user: UserCreateDto): Observable<void> {
+    return this.http.put<void>(`${this.apiUrl}/${id}`, user, { headers: this.getHeaders() }).pipe(
       catchError(this.handleError)
     );
   }
 
   deleteUser(id: string): Observable<void> {
-    return this.http.delete<void>(`${this.apiUrl}/${id}`).pipe(
+    return this.http.delete<void>(`${this.apiUrl}/${id}`, { headers: this.getHeaders() }).pipe(
       catchError(this.handleError)
     );
   }
 }
+

@@ -14,9 +14,9 @@ namespace UrWave.Infrastructure.Repositories
     {
         public UserRepository(AppDbContext context) : base(context) { }
 
-        public async Task<User?> GetByUsernameAsync(string username)
+        public async Task<User?> GetByEmailAsync(string Email)
         {
-            return await _dbSet.FirstOrDefaultAsync(u => u.Username == username);
+            return await _dbSet.FirstOrDefaultAsync(u => u.Email == Email);
         }
     }
 }

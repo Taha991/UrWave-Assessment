@@ -1,0 +1,39 @@
+<div class="main-container">
+    <p-card class="login-container">
+      <h2>Register</h2>
+      <form [formGroup]="registerForm" (ngSubmit)="onRegister()">
+        <p-floatLabel>
+          <input id="username" pInputText formControlName="username" type="text" />
+          <label for="username">Username</label>
+          <div *ngIf="formSubmitted && registerForm.controls['username'].invalid" class="error-message">
+            <small *ngIf="registerForm.controls['username'].errors?.['required']">Username is required.</small>
+            <small *ngIf="registerForm.controls['username'].errors?.['minlength']">Username must be at least 3 characters long.</small>
+          </div>
+        </p-floatLabel>
+  
+        <p-floatLabel>
+          <input id="email" pInputText formControlName="email" type="email" />
+          <label for="email">Email</label>
+          <div *ngIf="formSubmitted && registerForm.controls['email'].invalid" class="error-message">
+            <small *ngIf="registerForm.controls['email'].errors?.['required']">Email is required.</small>
+            <small *ngIf="registerForm.controls['email'].errors?.['email']">Invalid email format.</small>
+          </div>
+        </p-floatLabel>
+  
+        <p-floatLabel>
+          <input id="password" pInputText formControlName="password" type="password" />
+          <label for="password">Password</label>
+          <div *ngIf="formSubmitted && registerForm.controls['password'].invalid" class="error-message">
+            <small *ngIf="registerForm.controls['password'].errors?.['required']">Password is required.</small>
+            <small *ngIf="registerForm.controls['password'].errors?.['minlength']">Password must be at least 6 characters long.</small>
+          </div>
+        </p-floatLabel>
+  
+        <button pButton type="submit" label="Register"></button>
+      </form>
+      <div *ngIf="errorMessage" class="error-message">
+        {{ errorMessage }}
+      </div>
+    </p-card>
+  </div>
+  

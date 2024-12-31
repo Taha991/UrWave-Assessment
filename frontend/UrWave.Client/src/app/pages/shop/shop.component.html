@@ -1,0 +1,20 @@
+<div class="title-container">
+    <h1>Shop</h1>
+  </div>
+  
+  <div class="category-container">
+    <label for="favoriteCategory">Select Your Favorite Category:</label>
+    <select id="favoriteCategory" [(ngModel)]="favoriteCategory" (change)="filterProductsByCategory()">
+      <option *ngFor="let category of categories" [value]="category.name">{{ category.name }}</option>
+    </select>
+  </div>
+  
+  <div class="products-container grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+    <p-card *ngFor="let product of filteredProducts" header="{{ product.name }}">
+      <p>{{ product.description }}</p>
+      <p>Price: {{ product.price | currency }}</p>
+      <p>Stock: {{ product.stockQuantity }}</p>
+      <button pButton label="Add to Favorites"></button>
+    </p-card>
+  </div>
+  

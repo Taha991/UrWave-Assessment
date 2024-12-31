@@ -1,0 +1,19 @@
+.title-container {
+    text-align: center;
+    margin-bottom: 2rem;
+  }
+  
+  .category-container {
+    text-align: center;
+    margin-bottom: 2rem;
+  }
+  
+  .products-container {
+    display: grid;
+    gap: 1rem;
+  }
+  
+  p-card {
+    text-align: center;
+  }
+  

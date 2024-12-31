@@ -35,28 +35,3 @@
     text-align: center;
     margin-top: 1rem;
 }
-
-/* Style for the Login Button */
-.btn-login {
-    width: 100%;
-    background-color: #007bff; /* Default blue color */
-    color: #fff;
-}
-
-/* Style for the Register Button */
-.register-button {
-    margin-top: 1rem; /* Space above the register button */
-}
-
-.btn-register {
-    width: 100%;
-    background-color: #28a745; /* Green color for register */
-    color: #fff;
-}
-.error-message {
-    color: #e53e3e; /* Red color for errors */
-    text-align: center;
-    margin-top: 1rem;
-    font-size: 0.9rem;
-  }
-  
