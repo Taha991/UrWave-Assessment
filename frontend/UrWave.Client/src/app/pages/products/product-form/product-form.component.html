@@ -1,0 +1,54 @@
+<div class="p-fluid">
+    <form [formGroup]="productForm" (ngSubmit)="onSubmit()">
+      <p-panel header="Product Details">
+        <div class="p-field">
+          <label for="name">Name</label>
+          <input id="name" type="text" formControlName="name" pInputText />
+        </div>
+        <div class="p-field">
+          <label for="description">Description</label>
+          <textarea
+            id="description"
+            rows="3"
+            formControlName="description"
+            pInputTextarea
+          ></textarea>
+        </div>
+        <div class="p-field">
+          <label for="price">Price</label>
+          <input id="price" type="number" formControlName="price" pInputText />
+        </div>
+        <div class="p-field">
+          <label for="categoryId">Category</label>
+          <p-dropdown
+            id="categoryId"
+            [options]="categories"
+            formControlName="categoryId"
+            placeholder="Select a Category"
+          ></p-dropdown>
+        </div>
+        <div class="p-field">
+          <label for="status">Status</label>
+          <p-dropdown
+            id="status"
+            [options]="statusOptions"
+            formControlName="status"
+          ></p-dropdown>
+        </div>
+        <div class="p-field">
+          <label for="stockQuantity">Stock Quantity</label>
+          <input
+            id="stockQuantity"
+            type="number"
+            formControlName="stockQuantity"
+            pInputText
+          />
+        </div>
+      </p-panel>
+  
+      <div class="p-d-flex p-jc-end mt-3">
+        <button pButton type="submit" label="Save" [disabled]="productForm.invalid"></button>
+      </div>
+    </form>
+  </div>
+  

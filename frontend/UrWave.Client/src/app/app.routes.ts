@@ -7,6 +7,10 @@ import { PaymentOrderDetailsComponent } from './pages/payment-order-details/paym
 import { LoginComponent } from './pages/login/login.component';
 import { UnauthorizedComponent } from './pages/errors/unauthorized/unauthorized.component';
 import { ForbiddenComponent } from './pages/errors/forbidden/forbidden.component';
+import { ProductListComponent } from './pages/products/product-list/product-list.component';
+import { ProductFormComponent } from './pages/products/product-form/product-form.component';
+import { CategoryListComponent } from './pages/categories/category-list/category-list.component';
+import { CategoryFormComponent } from './pages/categories/category-form/category-form.component';
 import { authGuard } from './guards/auth.guard';
 import { roleGuard } from './guards/role.guard';
 import { loginGuard } from './guards/login.guard';
@@ -32,6 +36,30 @@ export const routes: Routes = [
     path: 'users',
     component: UsersComponent,
     // canActivate: [authGuard, roleGuard],
+  },
+  {
+    path: 'products',
+    component: ProductListComponent,
+  },
+  {
+    path: 'products/create',
+    component: ProductFormComponent,
+  },
+  {
+    path: 'products/edit/:id',
+    component: ProductFormComponent,
+  },
+  {
+    path: 'categories',
+    component: CategoryListComponent,
+  },
+  {
+    path: 'categories/create',
+    component: CategoryFormComponent,
+  },
+  {
+    path: 'categories/edit/:id',
+    component: CategoryFormComponent,
   },
   {
     path: 'login',

@@ -29,6 +29,9 @@ export class CategoryService {
     return throwError(() => new Error('Something went wrong; please try again later.'));
   }
 
+  getCategoriesForDropdown(): Observable<{ id: string; name: string }[]> {
+    return this.http.get<{ id: string; name: string }[]>(`${this.apiUrl}/dropdown`);
+  }
   getCategories(): Observable<Category[]> {
     return this.http.get<Category[]>(this.apiUrl).pipe(catchError(this.handleError));
   }

@@ -15,22 +15,40 @@
     </a>
     <a
       class="link"
-      routerLink="/payment-orders"
-      routerLinkActive="active"
-      ariaCurrentWhenActive="page"
-    >
-      <i class="pi pi-shopping-cart"></i>
-      <span>Orders</span></a
-    >
-    <a
-      class="link"
       routerLink="/users"
       routerLinkActive="active"
       ariaCurrentWhenActive="page"
     >
       <i class="pi pi-users"></i>
-      <span>Users</span></a
+      <span>Users</span>
+    </a>
+    <a
+      class="link"
+      routerLink="/payment-orders"
+      routerLinkActive="active"
+      ariaCurrentWhenActive="page"
     >
+      <i class="pi pi-shopping-cart"></i>
+      <span>Orders</span>
+    </a>
+    <a
+      class="link"
+      routerLink="/products"
+      routerLinkActive="active"
+      ariaCurrentWhenActive="page"
+    >
+      <i class="pi pi-box"></i>
+      <span>Products</span>
+    </a>
+    <a
+      class="link"
+      routerLink="/categories"
+      routerLinkActive="active"
+      ariaCurrentWhenActive="page"
+    >
+      <i class="pi pi-tags"></i>
+      <span>Categories</span>
+    </a>
     @if (!(isLoggedIn)) {
     <button pButton routerLink="/login">
       <div class="btn">Login</div>

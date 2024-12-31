@@ -36,9 +36,21 @@ namespace UrWave.API.Endpoints
                     var category = await repository.GetByIdAsync(id);
                     return category != null ? Results.Ok(category.ToViewDto()) : Results.NotFound();
                 }).WithName("GetCategoryById");
+                // Add this method in the CategoryEndpoints class
+                group.MapGet("/dropdown", async (ICategoryRepository repository, ILogger<Category> logger) =>
+                {
+                    logger.LogInformation("Fetching categories for dropdown");
+                    var categories = await repository.GetAllAsync();
+                    var dropdownItems = categories.Select(c => new
+                    {
+                        c.Id,
+                        c.Name
+                    });
+                    return Results.Ok(dropdownItems);
+                }).WithName("GetCategoriesForDropdown");
 
-                // POST /categories
-                group.MapPost("/", async (ICategoryRepository repository, [FromBody] CategoryCreateUpdateDto dto, IMemoryCache cache, ILogger<Category> logger) =>
+            // POST /categories
+            group.MapPost("/", async (ICategoryRepository repository, [FromBody] CategoryCreateUpdateDto dto, IMemoryCache cache, ILogger<Category> logger) =>
                 {
                     logger.LogInformation("Creating a new category");
                     var category = dto.ToEntity();

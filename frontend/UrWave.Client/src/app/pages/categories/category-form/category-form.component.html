@@ -1,0 +1,44 @@
+<div class="p-fluid">
+    <form [formGroup]="categoryForm" (ngSubmit)="onSubmit()">
+      <p-panel header="Category Details">
+        <div class="p-field">
+          <label for="name">Name</label>
+          <input id="name" type="text" formControlName="name" pInputText />
+        </div>
+        <div class="p-field">
+          <label for="description">Description</label>
+          <textarea
+            id="description"
+            rows="3"
+            formControlName="description"
+            pInputTextarea
+          ></textarea>
+        </div>
+        <div class="p-field">
+          <label for="parentCategoryId">Parent Category</label>
+          <input
+            id="parentCategoryId"
+            type="text"
+            formControlName="parentCategoryId"
+            pInputText
+          />
+        </div>
+        <div class="p-field">
+          <label for="status">Status</label>
+          <p-dropdown
+            id="status"
+            [options]="[
+              { label: 'Active', value: 'Active' },
+              { label: 'Inactive', value: 'Inactive' }
+            ]"
+            formControlName="status"
+          ></p-dropdown>
+        </div>
+      </p-panel>
+  
+      <div class="p-d-flex p-jc-end mt-3">
+        <button pButton type="submit" label="Save" [disabled]="categoryForm.invalid"></button>
+      </div>
+    </form>
+  </div>
+  
