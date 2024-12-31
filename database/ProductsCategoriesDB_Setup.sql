@@ -85,9 +85,10 @@ CREATE INDEX IDX_ActivityLogs_Timestamp ON ActivityLogs(Timestamp);
 CREATE TABLE Users (
     Id UNIQUEIDENTIFIER PRIMARY KEY DEFAULT NEWID(),
     Username NVARCHAR(50) NOT NULL UNIQUE,
+    Email NVARCHAR(50) NOT NULL UNIQUE,
     PasswordHash NVARCHAR(500) NOT NULL,
     Role NVARCHAR(20) NOT NULL, -- e.g., Admin, Viewer
-    CreatedDate DATETIME DEFAULT GETDATE()
+    CreatedDate DATETIME NOT NULL DEFAULT GETDATE()
 );
 GO
 

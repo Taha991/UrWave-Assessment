@@ -36,7 +36,7 @@ public partial class AppDbContext : DbContext
     {
         modelBuilder.Entity<ActivityLog>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Activity__3214EC074912D35D");
+            entity.HasKey(e => e.Id).HasName("PK__Activity__3214EC07D71ABE38");
 
             entity.HasIndex(e => e.Timestamp, "IDX_ActivityLogs_Timestamp");
 
@@ -48,7 +48,7 @@ public partial class AppDbContext : DbContext
 
             entity.HasOne(d => d.User).WithMany(p => p.ActivityLogs)
                 .HasForeignKey(d => d.UserId)
-                .HasConstraintName("FK__ActivityL__UserI__5070F446");
+                .HasConstraintName("FK__ActivityL__UserI__778AC167");
         });
 
         modelBuilder.Entity<AuditLog>(entity =>
@@ -141,16 +141,19 @@ public partial class AppDbContext : DbContext
 
         modelBuilder.Entity<User>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Users__3214EC07A7CAE74E");
+            entity.HasKey(e => e.Id).HasName("PK__Users__3214EC071CE6BC78");
 
             entity.HasIndex(e => e.Username, "IDX_Users_Username");
 
-            entity.HasIndex(e => e.Username, "UQ__Users__536C85E44F5297E9").IsUnique();
+            entity.HasIndex(e => e.Username, "UQ__Users__536C85E4270CF160").IsUnique();
+
+            entity.HasIndex(e => e.Email, "UQ__Users__A9D105346856F030").IsUnique();
 
             entity.Property(e => e.Id).HasDefaultValueSql("(newid())");
             entity.Property(e => e.CreatedDate)
                 .HasDefaultValueSql("(getdate())")
                 .HasColumnType("datetime");
+            entity.Property(e => e.Email).HasMaxLength(50);
             entity.Property(e => e.PasswordHash).HasMaxLength(500);
             entity.Property(e => e.Role).HasMaxLength(20);
             entity.Property(e => e.Username).HasMaxLength(50);
