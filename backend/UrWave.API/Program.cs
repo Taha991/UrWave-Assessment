@@ -24,6 +24,16 @@ builder.Services.AddScoped<IProductRepository, ProductRepository>();
 
 builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
 
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAllOrigins", policy =>
+    {
+        policy.AllowAnyOrigin()
+              .AllowAnyHeader()
+              .AllowAnyMethod();
+    });
+});
+
 
 builder.Services.AddMemoryCache();
 
@@ -32,6 +42,8 @@ builder.Logging.ClearProviders();
 builder.Logging.AddConsole();
 
 var app = builder.Build();
+
+app.UseCors("AllowAllOrigins");
 
 // Add custom middlewares
 app.UseMiddleware<ErrorHandlingMiddleware>(); // Error handling middleware

@@ -1,0 +1,42 @@
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+    <p-card header="Total Products">
+      <p>{{ products.length }}</p>
+    </p-card>
+    <p-card header="Total Categories">
+      <p>{{ categories.length }}</p>
+    </p-card>
+    <p-card header="Low Stock Alerts">
+      <ul>
+        <li *ngFor="let product of lowStockProducts">
+          {{ product.name }} - {{ product.stockQuantity }} in stock
+        </li>
+      </ul>
+      <p *ngIf="lowStockProducts.length === 0">No low stock products found.</p>
+    </p-card>
+    <p-card header="Recent Activities">
+      <ul>
+        <li *ngFor="let activity of recentActivities">{{ activity }}</li>
+      </ul>
+    </p-card>
+  </div>
+  
+  <div class="statistics-container">
+    <p-card class="chart-card" header="Products per Category">
+      <ng-container *ngIf="isProductCategoryChartDataAvailable; else noData">
+        <p-chart type="pie" [data]="productCategoryChartData" [options]="productCategoryChartOptions"></p-chart>
+      </ng-container>
+      <ng-template #noData>
+        <p class="text-center">Can't get data for Products per Category.</p>
+      </ng-template>
+    </p-card>
+  
+    <p-card class="chart-card" header="Low Stock Alerts">
+      <ng-container *ngIf="isLowStockChartDataAvailable; else noDataStock">
+        <p-chart type="bar" [data]="lowStockChartData" [options]="lowStockChartOptions"></p-chart>
+      </ng-container>
+      <ng-template #noDataStock>
+        <p class="text-center">Can't get data for Low Stock Alerts.</p>
+      </ng-template>
+    </p-card>
+  </div>
+  

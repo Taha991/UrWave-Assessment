@@ -1,0 +1,113 @@
+<div class="title-container">
+  <h1 class="title">Payment Orders</h1>
+</div>
+<div class="order-container">
+  <p-table
+    #dt
+    [value]="paymentOrders"
+    [paginator]="true"
+    [rows]="10"
+    [sortField]="sortField"
+    [sortOrder]="sortOrder"
+    [globalFilterFields]="[
+      'paymentReference',
+      'title',
+      'status',
+      'amount',
+      'currency'
+    ]"
+  >
+    <ng-template pTemplate="caption">
+      <div class="table-header">
+        <span class="p-input-icon-left">
+          <i class="pi pi-search"></i>
+          <input
+            pInputText
+            type="text"
+            placeholder="Global Search"
+            (input)="applyGlobalFilter($event, dt)"
+          />
+        </span>
+      </div>
+    </ng-template>
+    <ng-template pTemplate="header">
+      <tr>
+        <th pSortableColumn="paymentReference">
+          Payment Reference <p-sortIcon field="paymentReference"></p-sortIcon>
+        </th>
+        <th pSortableColumn="title">
+          Title <p-sortIcon field="title"></p-sortIcon>
+        </th>
+        <th pSortableColumn="status">
+          Status <p-sortIcon field="status"></p-sortIcon>
+        </th>
+        <th pSortableColumn="amount">
+          Amount <p-sortIcon field="amount"></p-sortIcon>
+        </th>
+        <th pSortableColumn="currency">
+          Currency <p-sortIcon field="currency"></p-sortIcon>
+        </th>
+        <th>Actions</th>
+      </tr>
+      <tr>
+        <th>
+          <input
+            pInputText
+            type="text"
+            (input)="applyColumnFilter($event, 'paymentReference', dt)"
+            placeholder="Search by Payment Reference"
+          />
+        </th>
+        <th>
+          <input
+            pInputText
+            type="text"
+            (input)="applyColumnFilter($event, 'title', dt)"
+            placeholder="Search by Title"
+          />
+        </th>
+        <th>
+          <input
+            pInputText
+            type="text"
+            (input)="applyColumnFilter($event, 'status', dt)"
+            placeholder="Search by Status"
+          />
+        </th>
+        <th>
+          <input
+            pInputText
+            type="text"
+            (input)="applyColumnFilter($event, 'amount', dt)"
+            placeholder="Search by Amount"
+          />
+        </th>
+        <th>
+          <input
+            pInputText
+            type="text"
+            (input)="applyColumnFilter($event, 'currency', dt)"
+            placeholder="Search by Currency"
+          />
+        </th>
+        <th></th>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-order>
+      <tr>
+        <td>{{ order.paymentReference }}</td>
+        <td>{{ order.title }}</td>
+        <td>{{ order.status }}</td>
+        <td>{{ order.amount }}</td>
+        <td>{{ order.currency }}</td>
+        <td>
+          <p-button
+            type="button"
+            icon="pi pi-external-link"
+            (click)="viewDetails(order)"
+          ></p-button>
+        </td>
+      </tr>
+    </ng-template>
+  </p-table>
+</div>

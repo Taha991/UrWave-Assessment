@@ -8,7 +8,7 @@ obj/
 *.user
 *.userosscache
 *.sln.docstates
-
+.angular
 # Logs
 *.log
 
