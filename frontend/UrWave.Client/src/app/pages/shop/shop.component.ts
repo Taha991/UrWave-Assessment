@@ -4,7 +4,7 @@ import { CategoryService } from '../../services/category.service';
 import { CardModule } from 'primeng/card';
 import { ButtonModule } from 'primeng/button';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms'; // For [(ngModel)]
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-shop',
@@ -13,7 +13,7 @@ import { FormsModule } from '@angular/forms'; // For [(ngModel)]
     CardModule,
     ButtonModule,
     CommonModule,
-    FormsModule, // For template-driven forms and pipes
+    FormsModule,
   ],
   templateUrl: './shop.component.html',
   styleUrls: ['./shop.component.css'],
@@ -21,14 +21,13 @@ import { FormsModule } from '@angular/forms'; // For [(ngModel)]
 export class ShopComponent implements OnInit {
   products: any[] = [];
   categories: any[] = [];
-  favoriteCategory = ''; // The customer's selected favorite category
+  favoriteCategory = ''; // Selected category ID
   filteredProducts: any[] = [];
 
   constructor(private productService: ProductService, private categoryService: CategoryService) {}
 
   ngOnInit(): void {
     this.loadCategories();
-    this.loadProducts();
   }
 
   loadCategories(): void {
@@ -42,11 +41,10 @@ export class ShopComponent implements OnInit {
     });
   }
 
-  loadProducts(): void {
-    this.productService.getProducts().subscribe({
+  loadProductsByCategory(categoryId: string): void {
+    this.productService.getProductsByCategory(categoryId).subscribe({
       next: (products) => {
-        this.products = products;
-        this.filterProductsByCategory();
+        this.filteredProducts = products;
       },
       error: () => {
         console.error('Failed to load products.');
@@ -54,9 +52,11 @@ export class ShopComponent implements OnInit {
     });
   }
 
-  filterProductsByCategory(): void {
-    this.filteredProducts = this.products.filter(
-      (product) => product.category === this.favoriteCategory
-    );
+  onCategoryChange(): void {
+    if (this.favoriteCategory) {
+      this.loadProductsByCategory(this.favoriteCategory);
+    } else {
+      this.filteredProducts = [];
+    }
   }
 }

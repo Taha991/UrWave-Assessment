@@ -30,7 +30,9 @@ export class ProductService {
     }
     return throwError(() => new Error('Something went wrong; please try again later.'));
   }
-
+  getProductsByCategory(categoryId: string): Observable<any[]> {
+    return this.http.get<any[]>(`${this.apiUrl}/category/${categoryId}`);
+  }
   getProducts(): Observable<Product[]> {
     return this.http.get<Product[]>(this.apiUrl).pipe(catchError(this.handleError));
   }

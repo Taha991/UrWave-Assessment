@@ -10,5 +10,6 @@ namespace UrWave.Domain.Interfaces
     public interface IProductRepository : IGenericRepository<Product>
     {
         Task<IEnumerable<Product>> GetProductsWithCategoryAsync();
+        Task<IEnumerable<Product>> GetProductsByCategoryAsync(Guid categoryId);
     }
 }

@@ -59,9 +59,17 @@ namespace UrWave.API.Endpoints
                     cache.Remove("Products");
                     return Results.NoContent();
                 }).WithName("UpdateProduct");
+            // GET /products/category/{categoryId}
+            group.MapGet("/category/{categoryId:guid}", async (IProductRepository repository, Guid categoryId, ILogger<Product> logger) =>
+            {
+                logger.LogInformation($"Fetching products for category ID {categoryId}");
+                var products = await repository.GetProductsByCategoryAsync(categoryId);
+                return products.Any() ? Results.Ok(products.Select(p => p.ToViewDto())) : Results.NotFound();
+            }).WithName("GetProductsByCategory");
 
-                // DELETE /products/{id}
-                group.MapDelete("/{id:guid}", async (IProductRepository repository, Guid id, IMemoryCache cache, ILogger<Product> logger) =>
+
+            // DELETE /products/{id}
+            group.MapDelete("/{id:guid}", async (IProductRepository repository, Guid id, IMemoryCache cache, ILogger<Product> logger) =>
                 {
                     logger.LogInformation($"Deleting product with ID {id}");
                     var existingProduct = await repository.GetByIdAsync(id);

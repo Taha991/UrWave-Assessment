@@ -20,5 +20,10 @@ namespace UrWave.Infrastructure.Repositories
                 .Include(p => p.Category)
                 .ToListAsync();
         }
+        public async Task<IEnumerable<Product>> GetProductsByCategoryAsync(Guid categoryId)
+        {
+            return await _context.Products.Where(p => p.CategoryId == categoryId).ToListAsync();
+        }
+
     }
 }
