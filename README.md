@@ -1,16 +1,35 @@
 
-# README.md
-
 ## Project Overview
 
-This repository contains the complete implementation for the Products and Categories Management System. The project includes both backend and frontend applications, along with database creation and seed data scripts.
+This repository contains the complete implementation of the Products and Categories Management System using Onion Architecture. The project ensures separation of concerns, scalability, and maintainability. It includes both backend and frontend applications, with secure authentication and role-based access control (RBAC).
 
 ## Features
 
-- **Backend**: .NET API with endpoints for managing products, categories, and user authentication.
-- **Frontend**: Angular application for managing products and categories with interactive features.
-- **Database**: SQL Server database with tables for products, categories, users, and related data.
-- **Authentication**: Login system with role-based redirection (Admin, Customer).
+### Backend
+- **Architecture**: Onion Architecture for clean separation of concerns.
+- **Authentication**: JWT-based authentication with refresh token support.
+- **Authorization**: Role-based access control (Admin, Customer) with middleware for role validation.
+- **Product Management**:
+  - Server-side pagination.
+  - Filtering by category, price range, and status.
+  - Custom sorting options.
+  - Inline editing for quick updates.
+- **Category Management**:
+  - Hierarchical structure support.
+  - CRUD operations with relationship handling.
+  - Product reassignment on category deletion.
+- **Error Handling**: Centralized error handling with detailed responses.
+- **Caching**: Basic caching for frequently accessed data.
+
+### Frontend
+- **Framework**: Angular 18+ with standalone components.
+- **State Management**: Signal-based state management for real-time updates.
+- **UI Components**: Built using PrimeNG components.
+- **Responsive Design**: Styled with TailwindCSS for consistent and responsive design.
+- **Role-based Redirection**: Conditional navigation based on user roles.
+
+### Database
+- SQL Server with tables for products, categories, users, roles, and logs.
 
 ## Setup Instructions
 
@@ -79,6 +98,16 @@ dotnet run
 
 The API will be available at `https://localhost:7024`.
 
+#### Configuration
+
+Update the connection string in `appsettings.json` to match your SQL Server setup. Example:
+
+```json
+"ConnectionStrings": {
+  "DefaultConnection": "Server=localhost;Database=ProductsCategoriesDB;Trusted_Connection=True;"
+}
+```
+
 ### Frontend Setup
 
 Navigate to the frontend folder:
@@ -108,6 +137,13 @@ The frontend will be available at `http://localhost:4200`.
    - **Email**: `admin@email.com`
    - **Password**: `123456`
 
+### Roles and Permissions
+
+| Role      | Permissions                              |
+|-----------|------------------------------------------|
+| Admin     | Full access to products, categories, and user management. |
+| Customer  | View products and categories.           |
+
 ## Files and Directories
 
 - **backend**: Contains the .NET API source code.
@@ -127,6 +163,14 @@ Submit the following details as per the requirements:
 ## Additional Notes
 
 - Ensure the backend and frontend are running simultaneously to test all features.
-- For login issues, check the seeded user credentials in the database:
-  - Admin credentials: `admin@email.com` / `123456`
-- Verify the connection string in the backend project's `appsettings.json` matches your SQL Server setup.
+- For login issues, check the seeded user credentials in the database.
+- Validate that server-side pagination is functional by testing endpoints with query parameters.
+- Review and test role-based restrictions for Admin and Customer users.
+
+## Key Enhancements
+
+1. **Onion Architecture**: Provides separation of concerns through layers for Core, Application, Infrastructure, and API.
+2. **JWT Authentication**: Secure user authentication with token-based mechanism.
+3. **Server-Side Pagination**: Efficient data handling for large datasets.
+4. **Role-Based Access Control**: Enhanced security and tailored user experiences.
+
