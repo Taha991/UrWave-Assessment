@@ -49,6 +49,29 @@ namespace UrWave.API.Endpoints
                 return Results.Ok(response);
             }).WithName("GetPaginatedProducts");
 
+            group.MapDelete("/batch", async (IProductRepository repository, [FromBody] IEnumerable<Guid> ids, IMemoryCache cache, ILogger<Product> logger) =>
+            {
+                logger.LogInformation($"Deleting products with IDs: {string.Join(", ", ids)}");
+                await repository.DeleteManyAsync(ids);
+                cache.Remove("Products");
+                return Results.NoContent();
+            }).WithName("BatchDeleteProducts");
+
+            group.MapPut("/batch/status", async (IProductRepository repository, [FromBody] ProductStatusUpdateDto dto, IMemoryCache cache, ILogger<Product> logger) =>
+            {
+                logger.LogInformation($"Updating status for products: {string.Join(", ", dto.ProductIds)} to {dto.Status}");
+                await repository.UpdateProductsStatusAsync(dto.ProductIds, dto.Status);
+                cache.Remove("Products");
+                return Results.NoContent();
+            }).WithName("BatchUpdateProductStatus");
+
+            group.MapPut("/batch/category", async (IProductRepository repository, [FromBody] ProductCategoryReassignDto dto, IMemoryCache cache, ILogger<Product> logger) =>
+            {
+                logger.LogInformation($"Reassigning category for products: {string.Join(", ", dto.ProductIds)} to {dto.CategoryId}");
+                await repository.ReassignProductsCategoryAsync(dto.ProductIds, dto.CategoryId);
+                cache.Remove("Products");
+                return Results.NoContent();
+            }).WithName("BatchReassignProductCategory");
 
             // GET /products/{id}
             group.MapGet("/{id:guid}", async (IProductRepository repository, Guid id, ILogger<Product> logger) =>

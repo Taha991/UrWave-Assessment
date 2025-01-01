@@ -31,6 +31,9 @@ export class ProductListComponent implements OnInit {
   totalItems = 0;
   currentPage = 1;
   pageSize = 10;
+  bulkStatus: number | null = null; // For bulk status update
+  bulkCategory: string | null = null; // For bulk category reassignment
+  selectedProducts: Product[] = []; // For batch operations
 
   // Filters
   searchQuery = ''; // Search by name
@@ -133,6 +136,86 @@ export class ProductListComponent implements OnInit {
     this.applyFilters();
   }
 
+  onBatchDelete(): void {
+    const ids = this.selectedProducts.map((p) => p.id);
+    this.productService.deleteProducts(ids).subscribe({
+      next: () => {
+        this.messageService.add({
+          severity: 'success',
+          summary: 'Success',
+          detail: 'Selected products deleted.',
+        });
+        this.loadProducts();
+      },
+      error: () => {
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Error',
+          detail: 'Failed to delete selected products.',
+        });
+      },
+    });
+  }
+  onBatchUpdateStatus(): void {
+    if (this.bulkStatus === null) {
+      this.messageService.add({
+        severity: 'warn',
+        summary: 'Warning',
+        detail: 'Please select a status before updating.',
+      });
+      return;
+    }
+  
+    const ids = this.selectedProducts.map((p) => p.id);
+    this.productService.updateProductsStatus(ids, this.bulkStatus).subscribe({
+      next: () => {
+        this.messageService.add({
+          severity: 'success',
+          summary: 'Success',
+          detail: 'Status updated for selected products.',
+        });
+        this.loadProducts();
+      },
+      error: () => {
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Error',
+          detail: 'Failed to update status.',
+        });
+      },
+    });
+  }
+  
+  onBatchReassignCategory(): void {
+    if (!this.bulkCategory) {
+      this.messageService.add({
+        severity: 'warn',
+        summary: 'Warning',
+        detail: 'Please select a category before reassigning.',
+      });
+      return;
+    }
+  
+    const ids = this.selectedProducts.map((p) => p.id);
+    this.productService.reassignProductsCategory(ids, this.bulkCategory).subscribe({
+      next: () => {
+        this.messageService.add({
+          severity: 'success',
+          summary: 'Success',
+          detail: 'Category reassigned for selected products.',
+        });
+        this.loadProducts();
+      },
+      error: () => {
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Error',
+          detail: 'Failed to reassign category.',
+        });
+      },
+    });
+  }
+  
   getStatusName(status: number): string {
     const statusMap: { [key: number]: string } = {
       0: 'Active',

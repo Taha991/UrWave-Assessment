@@ -13,6 +13,9 @@ namespace UrWave.Domain.Interfaces
         Task<IEnumerable<Product>> GetProductsByCategoryAsync(Guid categoryId);
         Task<IEnumerable<Product>> GetPaginatedProductsAsync(int page, int pageSize, string? sortBy, string? sortOrder, string? categoryId, int? status, decimal? minPrice, decimal? maxPrice);
         Task<int> GetTotalCountAsync(string? categoryId, int? status, decimal? minPrice, decimal? maxPrice);
+        Task DeleteManyAsync(IEnumerable<Guid> ids);
+        Task UpdateProductsStatusAsync(IEnumerable<Guid> productIds, int status);
+        Task ReassignProductsCategoryAsync(IEnumerable<Guid> productIds, Guid categoryId);
 
 
     }

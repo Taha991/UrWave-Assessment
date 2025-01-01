@@ -63,7 +63,18 @@ export class ProductService {
   deleteProduct(id: string): Observable<void> {
     return this.http.delete<void>(`${this.apiUrl}/${id}`).pipe(catchError(this.handleError));
   }
-
+  deleteProducts(productIds: string[]): Observable<void> {
+    return this.http.post<void>(`${this.apiUrl}/batch`, productIds);
+  }
+  updateProductsStatus(productIds: string[], status: number): Observable<void> {
+    const payload = { productIds, status };
+    return this.http.put<void>(`${this.apiUrl}/batch/status`, payload);
+  }
+  reassignProductsCategory(productIds: string[], categoryId: string): Observable<void> {
+    const payload = { productIds, categoryId };
+    return this.http.put<void>(`${this.apiUrl}/batch/category`, payload);
+  }
+      
   getPaginatedProducts(
     page: number,
     pageSize: number,

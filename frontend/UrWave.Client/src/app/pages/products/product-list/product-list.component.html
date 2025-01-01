@@ -1,114 +1,166 @@
 <div class="title-container">
-    <h1 class="title">Products</h1>
-  </div>
-  
-  <div class="filters-container p-d-flex p-jc-between mb-3">
-    <div class="filters p-d-flex">
-      <input
+  <h1 class="title">Product Management</h1>
+</div>
+
+<div class="filters-container">
+  <h2 class="filters-title">Search and Filter</h2>
+  <div class="filters p-d-flex">
+    <input
       pInputText
       type="text"
       (input)="applyColumnFilter($event, 'name', dt)"
       placeholder="Search by Name"
+      class="filter-input"
     />
-      <p-dropdown
-        [options]="categories"
-        [(ngModel)]="categoryId"
-        placeholder="Select Category"
-        [showClear]="true"
-        (onChange)="applyFilters()"
-        class="mr-2"
-      ></p-dropdown>
-      <p-dropdown
-        [options]="statuses"
-        [(ngModel)]="status"
-        placeholder="Select Status"
-        [showClear]="true"
-        (onChange)="applyFilters()"
-        class="mr-2"
-      ></p-dropdown>
-      <input
-        pInputText
-        type="number"
-        [(ngModel)]="minPrice"
-        placeholder="Min Price"
-        (change)="applyFilters()"
-        class="mr-2"
-      />
-      <input
-        pInputText
-        type="number"
-        [(ngModel)]="maxPrice"
-        placeholder="Max Price"
-        (change)="applyFilters()"
-        class="mr-2"
-      />
-      <button
-        pButton
-        label="Reset Filters"
-        class="p-button-secondary mr-2"
-        (click)="resetFilters()"
-      ></button>
-    </div>
-  
+    <p-dropdown
+      [options]="categories"
+      [(ngModel)]="categoryId"
+      placeholder="Select Category"
+      [showClear]="true"
+      (onChange)="applyFilters()"
+      class="filter-dropdown"
+    ></p-dropdown>
+    <p-dropdown
+      [options]="statuses"
+      [(ngModel)]="status"
+      placeholder="Select Status"
+      [showClear]="true"
+      (onChange)="applyFilters()"
+      class="filter-dropdown"
+    ></p-dropdown>
+    <input
+      pInputText
+      type="number"
+      [(ngModel)]="minPrice"
+      placeholder="Min Price"
+      (change)="applyFilters()"
+      class="filter-input"
+    />
+    <input
+      pInputText
+      type="number"
+      [(ngModel)]="maxPrice"
+      placeholder="Max Price"
+      (change)="applyFilters()"
+      class="filter-input"
+    />
+    <button
+      pButton
+      label="Reset Filters"
+      class="filter-button"
+      (click)="resetFilters()"
+    ></button>
   </div>
-  <button
+</div>
+
+<button
   pButton
   label="Add New Product"
-  class="p-button-success p-button-raised p-button-rounded"
+  class="p-button-success add-product-button"
   (click)="onCreate()"
 ></button>
 
-  <div class="table-container">
-    <p-table
-    #dt
-      [value]="products"
-      [paginator]="true"
-      [rows]="pageSize"
-      [totalRecords]="totalItems"
-      [sortField]="sortBy"
-      [sortOrder]="sortOrder === 'asc' ? 1 : -1"
-      [loading]="loading"
-      [responsiveLayout]="'scroll'"
-    >
-      <ng-template pTemplate="header">
-        <tr>
-          <th pSortableColumn="name">
-            Name <p-sortIcon field="name"></p-sortIcon>
-          </th>
-          <th pSortableColumn="price">
-            Price <p-sortIcon field="price"></p-sortIcon>
-          </th>
-          <th pSortableColumn="categoryName">
-            Category <p-sortIcon field="categoryName"></p-sortIcon>
-          </th>
-          <th pSortableColumn="status">
-            Status <p-sortIcon field="status"></p-sortIcon>
-          </th>
-          <th>Actions</th>
-        </tr>
-      </ng-template>
-      <ng-template pTemplate="body" let-product>
-        <tr>
-          <td>{{ product.name }}</td>
-          <td>{{ product.price | currency }}</td>
-          <td>{{ product.categoryName }}</td>
-          <td>{{ product.statusName }}</td>
-          <td>
-            <p-button
-              type="button"
-              icon="pi pi-pencil"
-              class="p-button-text"
-              (click)="onEdit(product.id)"
-            ></p-button>
-            <p-button
-              type="button"
-              icon="pi pi-trash"
-              class="p-button-text p-button-danger"
-              (click)="onDelete(product.id)"
-            ></p-button>
-          </td>
-        </tr>
-      </ng-template>
-    </p-table>
+<div class="bulk-actions">
+  <h3 class="bulk-title">Quick Bulk Updates</h3>
+  <div class="bulk-container p-d-flex">
+    <p-dropdown
+      [options]="statuses"
+      [(ngModel)]="bulkStatus"
+      placeholder="Select Bulk Status"
+      class="bulk-dropdown"
+    ></p-dropdown>
+    <p-dropdown
+      [options]="categories"
+      [(ngModel)]="bulkCategory"
+      placeholder="Select Bulk Category"
+      class="bulk-dropdown"
+    ></p-dropdown>
+    <button
+      pButton
+      label="Update Status"
+      class="bulk-button bulk-update-button"
+      (click)="onBatchUpdateStatus()"
+    ></button>
+    <button
+      pButton
+      label="Reassign Category"
+      class="bulk-button bulk-reassign-button"
+      (click)="onBatchReassignCategory()"
+    ></button>
+    <button
+      pButton
+      label="Delete Selected"
+      class="bulk-button bulk-delete-button"
+      (click)="onBatchDelete()"
+    ></button>
   </div>
-  
+</div>
+
+<div class="table-container">
+  <p-table
+    #dt
+    [value]="products"
+    [paginator]="true"
+    [rows]="pageSize"
+    [totalRecords]="totalItems"
+    [sortField]="sortBy"
+    [sortOrder]="sortOrder === 'asc' ? 1 : -1"
+    [loading]="loading"
+    [responsiveLayout]="'scroll'"
+    [(selection)]="selectedProducts"
+    [selectionMode]="'multiple'"
+  >
+    <ng-template pTemplate="header">
+      <tr>
+        <th>
+          <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+        </th>
+        <th pSortableColumn="name">
+          Name <p-sortIcon field="name"></p-sortIcon>
+        </th>
+        <th pSortableColumn="price">
+          Price <p-sortIcon field="price"></p-sortIcon>
+        </th>
+        
+        <th pSortableColumn="categoryName">
+          Category <p-sortIcon field="categoryName"></p-sortIcon>
+        </th>
+        <th pSortableColumn="status">
+          Status <p-sortIcon field="status"></p-sortIcon>
+        </th>
+        <th pSortableColumn="stockQuantity">
+          Quantity <p-sortIcon field="stockQuantity"></p-sortIcon>
+        </th>
+        <th>Actions</th>
+
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-product>
+      <tr>
+        <td>
+          <p-tableCheckbox [value]="product"></p-tableCheckbox>
+        </td>
+        <td>{{ product.name }}</td>
+        <td>{{ product.price | currency }}</td>
+        <td>{{ product.categoryName }}</td>
+        <td>{{ product.statusName }}</td>
+        <td>{{ product.stockQuantity }}</td>
+
+        <td>
+          <p-button
+            type="button"
+            icon="pi pi-pencil"
+            class="p-button-text"
+            (click)="onEdit(product.id)"
+          ></p-button>
+          <p-button
+            type="button"
+            icon="pi pi-trash"
+            class="p-button-text p-button-danger"
+            (click)="onDelete(product.id)"
+          ></p-button>
+        </td>
+      </tr>
+    </ng-template>
+  </p-table>
+</div>

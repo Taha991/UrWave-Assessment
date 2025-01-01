@@ -1,0 +1,85 @@
+.title-container {
+    text-align: center;
+    margin-bottom: 2rem;
+  }
+  
+  .title {
+    font-size: 2rem;
+    font-weight: bold;
+    color: #333;
+  }
+  
+  .filters-container {
+    margin-bottom: 2rem;
+  }
+  
+  .filters-title {
+    text-align: center;
+    margin-bottom: 1rem;
+    font-size: 1.5rem;
+    font-weight: 600;
+  }
+  
+  .filters {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .filter-input,
+  .filter-dropdown,
+  .filter-button {
+    min-width: 150px;
+  }
+  
+  .add-product-button {
+    display: block;
+    margin: 1rem auto;
+    font-size: 1rem;
+    padding: 0.5rem 1rem;
+  }
+  
+  .bulk-actions {
+    margin: 2rem 0;
+    text-align: center;
+  }
+  
+  .bulk-title {
+    font-size: 1.5rem;
+    text-align: center;
+
+    font-weight: 600;
+    margin-bottom: 1rem;
+  }
+  
+  .bulk-container {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+  }
+  
+  .bulk-button {
+    font-size: 1rem;
+    padding: 0.5rem 1rem;
+  }
+  
+  .bulk-update-button {
+    background-color: #ffcc00;
+    color: #000;
+  }
+  
+  .bulk-reassign-button {
+    background-color: #17a2b8;
+    color: #fff;
+  }
+  
+  .bulk-delete-button {
+    background-color: #dc3545;
+    color: #fff;
+  }
+  
+  .table-container {
+    margin-top: 2rem;
+  }
+  
