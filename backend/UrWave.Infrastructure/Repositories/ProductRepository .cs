@@ -109,7 +109,14 @@ namespace UrWave.Infrastructure.Repositories
             }
         }
 
+        public async Task UpdateRangeAsync(IEnumerable<Product> products)
+        {
+            _context.Products.UpdateRange(products);
+            await _context.SaveChangesAsync();
+
+        }
 
 
+
+        }
     }
-}

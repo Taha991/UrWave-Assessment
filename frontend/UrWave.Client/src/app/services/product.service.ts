@@ -41,6 +41,10 @@ export class ProductService {
     }
     return throwError(() => new Error('Something went wrong; please try again later.'));
   }
+  getAllProducts(): Observable<Product[]> {
+    return this.http.get<Product[]>(`${this.apiUrl}/all`);
+  }
+  
   getProductsByCategory(categoryId: string): Observable<any[]> {
     return this.http.get<any[]>(`${this.apiUrl}/category/${categoryId}`);
   }

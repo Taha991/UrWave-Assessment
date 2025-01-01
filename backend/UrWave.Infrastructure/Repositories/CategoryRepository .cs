@@ -18,5 +18,6 @@ namespace UrWave.Infrastructure.Repositories
         {
             return await _context.Categories.AnyAsync(c => c.Id == id);
         }
+      
     }
 }

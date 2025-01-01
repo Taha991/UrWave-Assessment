@@ -49,6 +49,13 @@ namespace UrWave.API.Endpoints
                 return Results.Ok(response);
             }).WithName("GetPaginatedProducts");
 
+            group.MapGet("/all", async (IProductRepository repository, ILogger<Product> logger) =>
+            {
+                logger.LogInformation("Fetching all products without filters");
+                var products = await repository.GetAllAsync(); // Ensure `GetAllAsync` exists in `IProductRepository`
+                return Results.Ok(products.Select(p => p.ToViewDto()));
+            }).WithName("GetAllProducts");
+
             group.MapDelete("/batch", async (IProductRepository repository, [FromBody] IEnumerable<Guid> ids, IMemoryCache cache, ILogger<Product> logger) =>
             {
                 logger.LogInformation($"Deleting products with IDs: {string.Join(", ", ids)}");

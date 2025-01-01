@@ -28,6 +28,16 @@ export class CategoryService {
     }
     return throwError(() => new Error('Something went wrong; please try again later.'));
   }
+  getCategoriesWithParent(): Observable<Category[]> {
+    return this.http.get<Category[]>(`${this.apiUrl}/hierarchy`);
+  }
+ 
+  
+ reassignProductsCategory(payload: { oldCategoryId: string; newCategoryId: string }): Observable<void> {
+    return this.http.post<void>(`${this.apiUrl}/reassign`, payload);
+}
+
+
 
   getCategoriesForDropdown(): Observable<{ id: string; name: string }[]> {
     return this.http.get<{ id: string; name: string }[]>(`${this.apiUrl}/dropdown`);

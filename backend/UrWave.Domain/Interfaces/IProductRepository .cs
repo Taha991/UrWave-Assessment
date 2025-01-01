@@ -16,7 +16,7 @@ namespace UrWave.Domain.Interfaces
         Task DeleteManyAsync(IEnumerable<Guid> ids);
         Task UpdateProductsStatusAsync(IEnumerable<Guid> productIds, int status);
         Task ReassignProductsCategoryAsync(IEnumerable<Guid> productIds, Guid categoryId);
-
+        Task UpdateRangeAsync(IEnumerable<Product> products);
 
     }
 }

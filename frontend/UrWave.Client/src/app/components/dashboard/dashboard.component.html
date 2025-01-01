@@ -1,42 +1,50 @@
-<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+<div class="dashboard">
+  <div class="stats-grid">
     <p-card header="Total Products">
-      <p>{{ products.length }}</p>
+      <ng-container *ngIf="products.length; else loading">
+        <p>{{ products.length }}</p>
+      </ng-container>
+      <ng-template #loading><p>Loading...</p></ng-template>
     </p-card>
+
     <p-card header="Total Categories">
-      <p>{{ categories.length }}</p>
+      <ng-container *ngIf="categories.length; else loading">
+        <p>{{ categories.length }}</p>
+      </ng-container>
     </p-card>
+
     <p-card header="Low Stock Alerts">
-      <ul>
+      <ul *ngIf="lowStockProducts.length; else noLowStock">
         <li *ngFor="let product of lowStockProducts">
           {{ product.name }} - {{ product.stockQuantity }} in stock
         </li>
       </ul>
-      <p *ngIf="lowStockProducts.length === 0">No low stock products found.</p>
+      <ng-template #noLowStock>
+        <p>No low stock products found.</p>
+      </ng-template>
     </p-card>
+
     <p-card header="Recent Activities">
       <ul>
         <li *ngFor="let activity of recentActivities">{{ activity }}</li>
       </ul>
     </p-card>
   </div>
-  
-  <div class="statistics-container">
+
+  <div class="charts-container">
     <p-card class="chart-card" header="Products per Category">
-      <ng-container *ngIf="isProductCategoryChartDataAvailable; else noData">
+      <ng-container *ngIf="isProductCategoryChartDataAvailable; else loadingChart">
         <p-chart type="pie" [data]="productCategoryChartData" [options]="productCategoryChartOptions"></p-chart>
       </ng-container>
-      <ng-template #noData>
-        <p class="text-center">Can't get data for Products per Category.</p>
+      <ng-template #loadingChart>
+        <p class="text-center">Loading chart data...</p>
       </ng-template>
     </p-card>
-  
+
     <p-card class="chart-card" header="Low Stock Alerts">
-      <ng-container *ngIf="isLowStockChartDataAvailable; else noDataStock">
+      <ng-container *ngIf="isLowStockChartDataAvailable; else loadingChart">
         <p-chart type="bar" [data]="lowStockChartData" [options]="lowStockChartOptions"></p-chart>
       </ng-container>
-      <ng-template #noDataStock>
-        <p class="text-center">Can't get data for Low Stock Alerts.</p>
-      </ng-template>
     </p-card>
   </div>
-  
+</div>
