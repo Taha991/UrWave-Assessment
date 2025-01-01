@@ -3,26 +3,56 @@
     <h2>Login</h2>
     <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
       <p-floatLabel>
-        <input id="email" pInputText formControlName="email" type="email" />
+        <input
+          id="email"
+          pInputText
+          formControlName="email"
+          type="email"
+          [ngClass]="{ 'error': loginForm.get('email')?.invalid && loginForm.get('email')?.touched }"
+        />
         <label for="email">Email</label>
       </p-floatLabel>
+      <small *ngIf="loginForm.get('email')?.errors?.['required'] && loginForm.get('email')?.touched" class="error-message">
+        Email is required.
+      </small>
+      <small *ngIf="loginForm.get('email')?.errors?.['email'] && loginForm.get('email')?.touched" class="error-message">
+        Invalid email format.
+      </small>
+
       <p-floatLabel>
-        <input id="password" pInputText formControlName="password" type="password" />
+        <input
+          id="password"
+          pInputText
+          formControlName="password"
+          type="password"
+          [ngClass]="{ 'error': loginForm.get('password')?.invalid && loginForm.get('password')?.touched }"
+        />
         <label for="password">Password</label>
       </p-floatLabel>
-        <!-- Display error message -->
-        <div *ngIf="errorMessage" class="error-message">
-          {{ errorMessage }}
-    </div>
+      <small *ngIf="loginForm.get('password')?.errors?.['required'] && loginForm.get('password')?.touched" class="error-message">
+        Password is required.
+      </small>
+      <small *ngIf="loginForm.get('password')?.errors?.['minlength'] && loginForm.get('password')?.touched" class="error-message">
+        Password must be at least 3 characters long.
+      </small>
+
+      <!-- Display error message -->
+      <div class="error-message" *ngIf="errorMessage">
+        <p>{{ errorMessage }}</p>
+      </div>
+      
       <button pButton type="submit" label="Login" class="btn-login"></button>
     </form>
 
-  
-
     <!-- Register Button -->
     <div class="register-button">
-      <button pButton type="button" label="Register" class="btn-register" (click)="navigateToRegister()"></button>
+      <button
+        pButton
+        type="button"
+        label="Register"
+        class="btn-register"
+        (click)="navigateToRegister()"
+      ></button>
     </div>
-    
   </p-card>
 </div>

@@ -43,25 +43,48 @@ export class LoginComponent {
   }
 
   onSubmit(): void {
-    if (this.loginForm.valid) {
-      const { email, password } = this.loginForm.value;
-      this.authService.login(email, password).subscribe({
-        next: (success) => {
-          if (success) {
-            const role = this.authService.getRole();
-            if (role == 'Admin') {
-              this.router.navigate(['/home']);
-            } else if (role == 'Customer') {
-              this.router.navigate(['/shop']);
-            }
-          }
-        },
-        error: (err) => {
-          this.errorMessage = err.error?.Message || 'Invalid email or password. Please try again.';
-        },
-      });
+    if (this.loginForm.invalid) {
+      this.loginForm.markAllAsTouched(); // Mark all fields as touched to display validation errors
+      return;
     }
+  
+    const { email, password } = this.loginForm.value;
+  
+    this.authService.login(email, password).subscribe({
+      next: (success) => {
+        if (success) {
+          const role = this.authService.getRole();
+          if (role === 'Admin') {
+            this.router.navigate(['/home']);
+          } else if (role === 'Customer') {
+            this.router.navigate(['/shop']);
+          }
+        }
+      },
+      error: (err) => {
+        debugger
+        console.error('Login failed:', err); // Log error for debugging
+  
+        // Handle specific error codes or show a generic message
+        if (err.status === 0) {
+          this.errorMessage = 'Unable to connect to the server. Please check your internet connection.';
+        } else if (err.status === 400) {
+          this.errorMessage = err.error?.message || 'Invalid email or password.';
+        } else {
+          this.errorMessage = 'An unexpected error occurred. Please try again later.';
+        }
+  
+        // Ensure change detection triggers to update the view
+        this.cd.detectChanges();
+      },
+    });
   }
+  
+  
+  
+
+  
+  
   
   
   

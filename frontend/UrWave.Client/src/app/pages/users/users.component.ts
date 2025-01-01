@@ -41,7 +41,7 @@ export class UsersComponent implements OnInit {
 
   // Role options for dropdown
   roleOptions = [
-    { label: 'Administrator', value: 'Administrator' },
+    { label: 'Admin', value: 'Admin' },
     { label: 'Customer', value: 'Customer' },
   ];
 

@@ -59,4 +59,13 @@
     margin-top: 1rem;
     font-size: 0.9rem;
   }
+  .error-message {
+    color: red;
+    font-size: 0.9em;
+    margin-top: 5px;
+  }
+  
+  input.error {
+    border: 1px solid red;
+  }
   

@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { BehaviorSubject, Observable, of } from 'rxjs';
-import { map, catchError } from 'rxjs/operators';
+import { BehaviorSubject, Observable, of , throwError } from 'rxjs';
+import { map, catchError ,  } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root',
@@ -30,10 +30,12 @@ export class AuthService {
       }),
       catchError((error) => {
         console.error('Login failed:', error);
-        return of(false);
+        // Re-throw the error so the caller can handle it
+        return throwError(() => error);
       })
     );
   }
+  
 
   logout(): void {
     this.http.post(`${this.apiUrl}/logout`, {}, { headers: { Authorization: `Bearer ${localStorage.getItem('token')}` } })
