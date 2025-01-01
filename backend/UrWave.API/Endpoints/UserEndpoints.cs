@@ -59,6 +59,7 @@ namespace UrWave.API.Endpoints
             // Login
             group.MapPost("/login", async (UserLoginDto dto, IUserRepository repository, IConfiguration config, ILogger<User> logger) =>
             {
+                
                 var user = await repository.GetByEmailAsync(dto.Email);
                 if (user == null)
                 {
