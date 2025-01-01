@@ -15,22 +15,43 @@ namespace UrWave.API.Endpoints
             {
                 var group = routes.MapGroup("/products").WithTags("Products");
 
-                // GET /products
-                group.MapGet("/", async (IProductRepository repository, IMemoryCache cache, ILogger<Product> logger) =>
-                {
-                    logger.LogInformation("Fetching all products");
-                    if (!cache.TryGetValue("Products", out IEnumerable<ProductViewDto> products))
-                    {
-                        products = (await repository.GetProductsWithCategoryAsync())
-                            .Select(p => p.ToViewDto());
-                        cache.Set("Products", products, TimeSpan.FromMinutes(5));
-                        logger.LogInformation("Products cached");
-                    }
-                    return Results.Ok(products);
-                }).WithName("GetAllProducts");
+            // GET /products
+            // GET /products
+            group.MapGet("/", async (HttpRequest request, IProductRepository repository, IMemoryCache cache, ILogger<Product> logger) =>
+            {
+                logger.LogInformation("Fetching paginated, filtered, and sorted products");
 
-                // GET /products/{id}
-                group.MapGet("/{id:guid}", async (IProductRepository repository, Guid id, ILogger<Product> logger) =>
+                // Extract query parameters
+                var queryParams = request.Query;
+                int page = int.TryParse(queryParams["page"], out var parsedPage) ? parsedPage : 1;
+                int pageSize = int.TryParse(queryParams["pageSize"], out var parsedPageSize) ? parsedPageSize : 10;
+                string? sortBy = queryParams["sortBy"];
+                string? sortOrder = queryParams["sortOrder"]; // "asc" or "desc"
+                string? categoryId = queryParams["categoryId"];
+                int? status = int.TryParse(queryParams["status"], out var parsedStatus) ? parsedStatus : null; // Parse status as int?
+                decimal? minPrice = decimal.TryParse(queryParams["minPrice"], out var parsedMinPrice) ? parsedMinPrice : null;
+                decimal? maxPrice = decimal.TryParse(queryParams["maxPrice"], out var parsedMaxPrice) ? parsedMaxPrice : null;
+
+                // Fetch data
+                var products = await repository.GetPaginatedProductsAsync(page, pageSize, sortBy, sortOrder, categoryId, status, minPrice, maxPrice);
+                var totalItems = await repository.GetTotalCountAsync(categoryId, status, minPrice, maxPrice);
+
+                // Prepare response
+                var response = new
+                {
+                    Data = products.Select(p => p.ToViewDto()),
+                    TotalItems = totalItems,
+                    TotalPages = (int)Math.Ceiling(totalItems / (double)pageSize),
+                    CurrentPage = page,
+                    PageSize = pageSize
+                };
+
+                return Results.Ok(response);
+            }).WithName("GetPaginatedProducts");
+
+
+            // GET /products/{id}
+            group.MapGet("/{id:guid}", async (IProductRepository repository, Guid id, ILogger<Product> logger) =>
                 {
                     logger.LogInformation($"Fetching product with ID {id}");
                     var product = await repository.GetByIdAsync(id);

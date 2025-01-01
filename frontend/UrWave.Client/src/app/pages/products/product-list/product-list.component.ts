@@ -1,15 +1,26 @@
 import { Component, OnInit } from '@angular/core';
 import { ProductService, Product } from '../../../services/product.service';
+import { CategoryService } from '../../../services/category.service';
 import { Router } from '@angular/router';
 import { MessageService } from 'primeng/api';
-import { TableModule } from 'primeng/table'; // Import TableModule
-import { ButtonModule } from 'primeng/button'; // Import ButtonModule
-import { CommonModule } from '@angular/common'; // For Angular directives like *ngIf, *ngFor
+import { TableModule } from 'primeng/table';
+import { ButtonModule } from 'primeng/button';
+import { InputTextModule } from 'primeng/inputtext';
+import { DropdownModule } from 'primeng/dropdown';
+import { FormsModule } from '@angular/forms';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-product-list',
   standalone: true,
-  imports: [CommonModule, TableModule, ButtonModule], // Add required modules here
+  imports: [
+    CommonModule,
+    TableModule,
+    ButtonModule,
+    InputTextModule,
+    DropdownModule,
+    FormsModule, // For ngModel
+  ],
   templateUrl: './product-list.component.html',
   styleUrls: ['./product-list.component.scss'],
   providers: [MessageService],
@@ -17,42 +28,140 @@ import { CommonModule } from '@angular/common'; // For Angular directives like *
 export class ProductListComponent implements OnInit {
   products: Product[] = [];
   loading = true;
+  totalItems = 0;
+  currentPage = 1;
+  pageSize = 10;
+
+  // Filters
+  searchQuery = ''; // Search by name
+  categoryId = '';
+  status: number | null = null;
+  minPrice?: number;
+  maxPrice?: number;
+  sortBy = '';
+  sortOrder = '';
+
+  categories: { label: string; value: string }[] = [];
+  statuses = [
+    { label: 'All', value: null },
+    { label: 'Active', value: 0 },
+    { label: 'Inactive', value: 1 },
+    { label: 'Discontinued', value: 2 },
+  ];
 
   constructor(
     private productService: ProductService,
+    private categoryService: CategoryService,
     private messageService: MessageService,
     private router: Router
   ) {}
 
   ngOnInit(): void {
+    this.loadCategories();
     this.loadProducts();
   }
 
-  loadProducts(): void {
-    this.productService.getProducts().subscribe({
+  loadCategories(): void {
+    this.categoryService.getCategories().subscribe({
       next: (data) => {
-        this.products = data;
-        this.loading = false;
+        this.categories = [{ label: 'All', value: '' }, ...data.map((category) => ({
+          label: category.name,
+          value: category.id,
+        }))];
       },
       error: () => {
-        this.loading = false;
         this.messageService.add({
           severity: 'error',
           summary: 'Error',
-          detail: 'Failed to load products.',
+          detail: 'Failed to load categories.',
         });
       },
     });
   }
-  
+
+  loadProducts(): void {
+    this.loading = true;
+    this.productService
+      .getPaginatedProducts(
+        this.currentPage,
+        this.pageSize,
+        this.sortBy,
+        this.sortOrder,
+        this.categoryId,
+        this.status?.toString(),
+        this.minPrice,
+        this.maxPrice
+      )
+      .subscribe({
+        next: (data) => {
+          this.products = data.data.map((product) => ({
+            ...product,
+            statusName: this.getStatusName(product.status),
+            categoryName: this.getCategoryName(product.categoryId),
+          }));
+          this.totalItems = data.totalItems;
+          this.loading = false;
+        },
+        error: () => {
+          this.loading = false;
+          this.messageService.add({
+            severity: 'error',
+            summary: 'Error',
+            detail: 'Failed to load products.',
+          });
+        },
+      });
+  }
+
+  applySearch(): void {
+    this.currentPage = 1;
+    this.loadProducts();
+  }
+
+  applyFilters(): void {
+    this.currentPage = 1;
+    this.loadProducts();
+  }
+
+  resetFilters(): void {
+    this.searchQuery = '';
+    this.categoryId = '';
+    this.status = null;
+    this.minPrice = undefined;
+    this.maxPrice = undefined;
+    
+    this.applyFilters();
+  }
+
+  getStatusName(status: number): string {
+    const statusMap: { [key: number]: string } = {
+      0: 'Active',
+      1: 'Inactive',
+      2: 'Discontinued',
+    };
+    return statusMap[status] || 'Unknown';
+  }
+
+  getCategoryName(categoryId: string): string {
+    const category = this.categories.find((cat) => cat.value === categoryId);
+    return category?.label || 'Unknown';
+  }
+
   onCreate(): void {
     this.router.navigate(['/products/create']);
   }
-  
+
   onEdit(productId: string): void {
     this.router.navigate(['/products/edit', productId]);
   }
-
+  applyGlobalFilter(event: Event, dt: any): void {
+    const value = (event.target as HTMLInputElement).value.trim().toLowerCase();
+    dt.filterGlobal(value, 'contains');
+  }
+  applyColumnFilter(event: Event, field: string, dt: any): void {
+    const value = (event.target as HTMLInputElement).value.trim().toLowerCase();
+    dt.filter(value, field, 'contains');
+  }
   onDelete(productId: string): void {
     if (confirm('Are you sure you want to delete this product?')) {
       this.productService.deleteProduct(productId).subscribe({

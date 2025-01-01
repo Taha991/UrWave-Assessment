@@ -1,4 +1,4 @@
-import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse, HttpParams } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
 import { catchError, Observable, throwError } from 'rxjs';
 
@@ -12,6 +12,17 @@ export interface Product {
   stockQuantity: number;
   createdDate?: Date;
   updatedDate?: Date;
+}
+export interface PaginatedResponse<T> {
+  data: T[];
+  totalItems: number;
+  totalPages: number;
+  currentPage: number;
+  pageSize: number;
+}
+export interface ProductDisplay extends Product {
+  statusName: string; // For display
+  categoryName: string; // For display
 }
 
 @Injectable({
@@ -52,4 +63,29 @@ export class ProductService {
   deleteProduct(id: string): Observable<void> {
     return this.http.delete<void>(`${this.apiUrl}/${id}`).pipe(catchError(this.handleError));
   }
+
+  getPaginatedProducts(
+    page: number,
+    pageSize: number,
+    sortBy?: string,
+    sortOrder?: string,
+    categoryId?: string,
+    status?: string,
+    minPrice?: number,
+    maxPrice?: number
+  ): Observable<PaginatedResponse<Product>> {
+    let params = new HttpParams()
+      .set('page', page)
+      .set('pageSize', pageSize);
+
+    if (sortBy) params = params.set('sortBy', sortBy);
+    if (sortOrder) params = params.set('sortOrder', sortOrder);
+    if (categoryId) params = params.set('categoryId', categoryId);
+    if (status) params = params.set('status', status);
+    if (minPrice !== undefined) params = params.set('minPrice', minPrice.toString());
+    if (maxPrice !== undefined) params = params.set('maxPrice', maxPrice.toString());
+
+    return this.http.get<PaginatedResponse<Product>>(this.apiUrl, { params });
+  }
+
 }
